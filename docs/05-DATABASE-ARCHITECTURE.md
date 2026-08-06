@@ -5,7 +5,7 @@
 > **Status:** 🔄 Pending approval (Phase 1 gate)
 > **Version:** 1.0.0
 > **Last updated:** 2026-08-06
-> **Relationship:** Defines *how data is stored, protected, and accessed*. The logical schema (entities/tables) is in [07-DATA-MODEL](07-DATA-MODEL.md); storage choices derive from [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md).
+> **Relationship:** Defines *how data is stored, protected, and accessed*. The logical schema (entities/tables) is managed as versioned migrations in `database/`; storage choices derive from [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md).
 
 ---
 
@@ -34,7 +34,7 @@
 
 This document defines the **database and data-storage architecture** for the Hospital ERP Enterprise platform: what storage components exist, how they are deployed and made highly available, how schema changes are managed, how data is accessed, backed up, secured, and retained.
 
-**Scope:** storage topology, migrations, transactions/concurrency, indexing, partitioning, backups, security, monitoring. It does **not** define the logical data model (tables/relationships — see [07-DATA-MODEL](07-DATA-MODEL.md)) or the API surface (see [08-API](08-API.md)).
+**Scope:** storage topology, migrations, transactions/concurrency, indexing, partitioning, backups, security, monitoring. It does **not** enumerate the full logical data model (tables/relationships), which is governed through versioned schema migrations (see [04-CODING-STANDARDS](04-CODING-STANDARDS.md)), nor the API surface (see [11-API-STANDARDS](11-API-STANDARDS.md)).
 
 **Gate:** pending approval as part of the Phase 1 design set.
 
@@ -111,7 +111,7 @@ This document defines the **database and data-storage architecture** for the Hos
 
 ## 7. Indexing & Performance
 
-- **Indexes** are defined in schema design ([07-DATA-MODEL](07-DATA-MODEL.md)) for hot query paths (patient search, encounter lookup, order/result queries).
+- **Indexes** are defined in the schema migrations in `database/` for hot query paths (patient search, encounter lookup, order/result queries); naming per [04-CODING-STANDARDS](04-CODING-STANDARDS.md).
 - **MUST** avoid N+1 query patterns; use joins/loading appropriate to the ORM.
 - **Query analysis:** EXPLAIN/ANALYZE on slow queries; index on WHERE/JOIN/ORDER columns.
 - **Vacuum & statistics** maintenance scheduled (autovacuum tuned) for steady-state performance.
@@ -124,7 +124,7 @@ This document defines the **database and data-storage architecture** for the Hos
 
 - **Partitioning** by time for high-volume tables (encounters, audit log, results) to bound table size and speed maintenance.
 - **Archival** of old/inactive data per defined policy; archives stored in object storage.
-- **Retention schedule** per data class (defined in [09-SECURITY](09-SECURITY.md) and compliance matrix in [00-MASTER-ROADMAP](00-MASTER-ROADMAP.md)); automated, audited.
+- **Retention schedule** per data class (defined in [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md) and compliance matrix in [00-MASTER-ROADMAP](00-MASTER-ROADMAP.md)); automated, audited.
 - **Purge/deletion** is logged and irreversible by policy; deletion of clinical records follows consent/legal requirements.
 
 ---
@@ -134,7 +134,7 @@ This document defines the **database and data-storage architecture** for the Hos
 - **Application access:** via a data-access layer / ORM with parameterized queries (never raw string SQL).
 - **Connection management:** pooled, short-lived connections; configured per environment.
 - **Read/write routing:** application uses primary for writes; read replicas for read-only paths where configured.
-- **No direct DB access** from the presentation/mobile layers — all access via API ([08-API](08-API.md)).
+- **No direct DB access** from the presentation/mobile layers — all access via API ([11-API-STANDARDS](11-API-STANDARDS.md)).
 - **Reporting/analytics** read from projections or a staging store, not the OLTP primary.
 
 ---
@@ -207,10 +207,10 @@ This document defines the **database and data-storage architecture** for the Hos
 | [02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md) | Module/data architecture this implements |
 | [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md) | Storage technology choices |
 | [04-CODING-STANDARDS](04-CODING-STANDARDS.md) | SQL/data-access coding rules |
-| [07-DATA-MODEL](07-DATA-MODEL.md) | Logical schema (tables/relationships) |
-| [08-API](08-API.md) | Data access surface |
-| [09-SECURITY](09-SECURITY.md) | Security controls & retention |
-| [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md) | Deployment & operations |
+| [00-MASTER-ROADMAP](00-MASTER-ROADMAP.md) | Data model scope & sequencing |
+| [11-API-STANDARDS](11-API-STANDARDS.md) | Data access surface |
+| [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md) | Security controls & retention |
+| [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md) | Deployment & operations |
 
 ---
 

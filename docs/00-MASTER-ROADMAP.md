@@ -94,7 +94,7 @@ Become the trusted operational backbone of the hospital — one platform where p
 ### 3.3 Assumptions
 - A modern browser is the web target; iOS/Android cover mobile.
 - Internet connectivity is reliable for cloud-hosted components; offline-capable workflows are evaluated per module.
-- Regulatory baseline is HIPAA alignment plus local health-data regulation; exact list confirmed in `09-SECURITY.md`.
+- Regulatory baseline is HIPAA alignment plus local health-data regulation; exact list confirmed in `08-AUDIT-LOGGING.md`.
 
 ---
 
@@ -162,7 +162,7 @@ hospital-erp-enterprise/
 
 ## 7. Delivery Timeline & Milestones
 
-> Indicative sequencing, not a commitment. Durations are refined at each phase gate. Timeline anchors are shown by phase, to be scheduled once resourcing is confirmed in `10-INFRASTRUCTURE.md`.
+> Indicative sequencing, not a commitment. Durations are refined at each phase gate. Timeline anchors are shown by phase, to be scheduled once resourcing is confirmed in `16-DEPLOYMENT-STANDARDS.md`.
 
 | Milestone | Phase | Deliverable | Indicative window |
 | --- | --- | --- | --- |
@@ -217,10 +217,10 @@ Each phase is **independently shippable** and produces a working, demonstrable i
 **Goal:** Lock technical direction before any feature code.
 
 - Systems architecture (`02-SYSTEM-ARCHITECTURE.md`)
-- Data model & database design (`07-DATA-MODEL.md`)
-- API contract & versioning strategy (`08-API.md`)
-- Security & compliance architecture (`09-SECURITY.md`)
-- Infrastructure, deployment & container strategy (`10-INFRASTRUCTURE.md`)
+- Data model & database design (`05-DATABASE-ARCHITECTURE.md`)
+- API contract & versioning strategy (`11-API-STANDARDS.md`)
+- Security & compliance architecture (`08-AUDIT-LOGGING.md`)
+- Infrastructure, deployment & container strategy (`16-DEPLOYMENT-STANDARDS.md`)
 
 **Exit criteria:**
 - ⛔ All design documents approved.
@@ -516,7 +516,7 @@ Scoring: **Impact** × **Likelihood** (1–5) → **Exposure** (Critical ≥ 16,
 
 ## 15. Compliance Matrix
 
-> High-level alignment targets. **Authoritative control mapping is in `09-SECURITY.md`.**
+> High-level alignment targets. **Authoritative control mapping is in `08-AUDIT-LOGGING.md`.**
 
 | Control area | Requirement | Responsible | Verified in phase |
 | --- | --- | --- | --- |
@@ -553,10 +553,16 @@ Scoring: **Impact** × **Likelihood** (1–5) → **Exposure** (Critical ≥ 16,
 | 04 | **Coding Standards** | 🔄 Pending approval (Phase 1) |
 | 05 | **Database Architecture** | 🔄 Pending approval (Phase 1) |
 | 06 | **Authentication & Authorization** | 🔄 Pending approval (Phase 1) |
-| 07 | Data Model & Database Design | ◻️ Planned (Phase 1) |
-| 08 | API Contract & Versioning | ◻️ Planned (Phase 1) |
-| 09 | Security & Compliance | ◻️ Planned (Phase 1) |
-| 10 | Infrastructure & Deployment | ◻️ Planned (Phase 1) |
+| 07 | **Roles & Permissions** | 🔄 Pending approval (Phase 1) |
+| 08 | **Audit Logging** | 🔄 Pending approval (Phase 1) |
+| 09 | **Multi-Tenancy** | 🔄 Pending approval (Phase 1) |
+| 10 | **Hospital Hierarchy** | 🔄 Pending approval (Phase 1) |
+| 11 | **API Standards** | 🔄 Pending approval (Phase 1) |
+| 12 | **UI/UX Guidelines** | 🔄 Pending approval (Phase 1) |
+| 13 | **Design System** | 🔄 Pending approval (Phase 1) |
+| 14 | **Performance Standards** | 🔄 Pending approval (Phase 1) |
+| 15 | **Testing Standards** | 🔄 Pending approval (Phase 1) |
+| 16 | **Deployment Standards** | 🔄 Pending approval (Phase 1) |
 | — | *(future docs added as phases are planned)* | — |
 
 ---

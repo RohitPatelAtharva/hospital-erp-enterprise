@@ -5,7 +5,7 @@
 > **Status:** 🔄 Pending approval (Phase 1 gate)
 > **Version:** 1.0.0
 > **Last updated:** 2026-08-06
-> **Relationship:** Defines the identity & access model implemented in **Phase 2 (IAM)**. Broader security & compliance controls are in [09-SECURITY](09-SECURITY.md); identity technology choice is proposed in [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md).
+> **Relationship:** Defines the identity & access model implemented in **Phase 2 (IAM)**. Broader security & compliance controls are in [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md); identity technology choice is proposed in [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md).
 
 ---
 
@@ -36,7 +36,7 @@ This document defines the **authentication and authorization architecture** for 
 
 It is the design basis for **Phase 2 (IAM)**, which is a hard prerequisite for every authenticated feature (see [00-MASTER-ROADMAP](00-MASTER-ROADMAP.md)).
 
-**Scope:** identity, authN, authZ, sessions, roles/permissions, tenancy, audit. Out of scope: application-layer security beyond identity (in [09-SECURITY](09-SECURITY.md)) and identity data persistence schema (in [07-DATA-MODEL](07-DATA-MODEL.md)).
+**Scope:** identity, authN, authZ, sessions, roles/permissions, tenancy, audit. Out of scope: application-layer security beyond identity (in [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md)) and identity data persistence schema (in [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)).
 
 ---
 
@@ -120,7 +120,7 @@ It is the design basis for **Phase 2 (IAM)**, which is a hard prerequisite for e
 
 ## 8. Authorization Model
 
-- **Baseline: RBAC.** Users have roles; roles aggregate permissions; permissions map to operations (see [09-SECURITY](09-SECURITY.md) for control mapping).
+- **Baseline: RBAC.** Users have roles; roles aggregate permissions; permissions map to operations (see [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md) for control mapping).
 - **Progressive: policy-based (ABAC).** Where access depends on context (facility, department, patient relationship, consent), enforce policy rules in addition to roles.
 - **Enforcement points:** API gateway enforces coarse authZ; service/domain layer re-checks fine-grained rules (defense in depth).
 - **Tenant/facility scoping:** a user's access is always scoped to the facilities/contexts they are authorized for.
@@ -138,7 +138,7 @@ It is the design basis for **Phase 2 (IAM)**, which is a hard prerequisite for e
 
 ## 10. Multi-Facility / Tenant Model
 
-- **Data model supports multi-facility** from Phase 3 (see [07-DATA-MODEL](07-DATA-MODEL.md)); single-facility deployment first.
+- **Data model supports multi-facility** from Phase 3 (see [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)); single-facility deployment first.
 - **Scoping:** authorization tokens and policies carry facility/context scope so a user only sees their authorized facilities.
 - **Isolation:** logical tenant isolation via scoping + row-level constraints; physical isolation only where compliance demands.
 
@@ -196,9 +196,9 @@ It is the design basis for **Phase 2 (IAM)**, which is a hard prerequisite for e
 | [02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md) | Security architecture view |
 | [03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md) | Identity technology (D2) |
 | [04-CODING-STANDARDS](04-CODING-STANDARDS.md) | Security coding rules |
-| [07-DATA-MODEL](07-DATA-MODEL.md) | Identity data schema |
-| [08-API](08-API.md) | Token validation & API enforcement |
-| [09-SECURITY](09-SECURITY.md) | Broader security & compliance |
+| [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md) | Identity data schema |
+| [11-API-STANDARDS](11-API-STANDARDS.md) | Token validation & API enforcement |
+| [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md) | Broader security & compliance |
 
 ---
 

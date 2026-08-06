@@ -30,7 +30,7 @@ This document defines the **concrete technology stack** for the Hospital ERP Ent
 
 It is the approved baseline against which all implementation proceeds. It deliberately separates **stack choice** (here) from **system structure** ([02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md)).
 
-**Scope:** decisions about technology selection and versioning. Out of scope: schema design ([07-DATA-MODEL](07-DATA-MODEL.md)), API contracts ([08-API](08-API.md)), security controls ([09-SECURITY](09-SECURITY.md)), and infrastructure operations ([10-INFRASTRUCTURE](10-INFRASTRUCTURE.md)).
+**Scope:** decisions about technology selection and versioning. Out of scope: schema design ([05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)), API contracts ([11-API-STANDARDS](11-API-STANDARDS.md)), security controls ([08-AUDIT-LOGGING](08-AUDIT-LOGGING.md)), and infrastructure operations ([16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md)).
 
 **Gate:** Per the roadmap Phase 1 gate, implementation begins only after this baseline is approved. Items marked ⚠️ **proposed** require sign-off; items marked ✅ **approved** are locked.
 
@@ -193,9 +193,9 @@ Every choice is tested against these principles (derived from the vision and arc
 
 ## 6. Interoperability & Standards
 
-- **APIs:** OpenAPI 3.x (see [08-API](08-API.md)).
+- **APIs:** OpenAPI 3.x (see [11-API-STANDARDS](11-API-STANDARDS.md)).
 - **Identity:** OAuth 2.0 / OIDC.
-- **Interoperability:** FHIR R4 for clinical exchange; HL7 where required (see Phase 10 and [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md) for integration surface).
+- **Interoperability:** FHIR R4 for clinical exchange; HL7 where required (see Phase 10 and [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md) for integration surface).
 - **Observability:** OpenTelemetry for traces/metrics.
 - **Containers:** OCI images.
 
@@ -207,7 +207,7 @@ These standards are chosen to **avoid lock-in** and to make external integration
 
 - **Preference for permissive/open licensing** (PostgreSQL, Redis, React, OpenSearch, Grafana, Prometheus, Loki) to avoid per-seat or per-node licensing surprises.
 - **Notable commercial items** to budget: container registry/storage, managed services (if adopted), observability hosting (if not self-hosted), and any enterprise middleware.
-- A **cost model** is prepared in [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md); this document records the licensing implications of each choice.
+- A **cost model** is prepared in [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md); this document records the licensing implications of each choice.
 
 ---
 

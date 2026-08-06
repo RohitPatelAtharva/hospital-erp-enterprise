@@ -38,7 +38,7 @@
 
 This document defines the **target system architecture** for the Hospital ERP Enterprise platform. It describes the structural, run-time, and deployment views of the system; the principles that govern technical decisions; and the recommended technology baseline.
 
-**Scope:** The architecture of the platform itself — its modules, services, data handling, APIs, and deployment. It does **not** detail the full database schema (see [07-DATA-MODEL](07-DATA-MODEL.md)), the API contract surface (see [08-API](08-API.md)), security controls (see [09-SECURITY](09-SECURITY.md)), or infrastructure operations (see [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md)).
+**Scope:** The architecture of the platform itself — its modules, services, data handling, APIs, and deployment. It does **not** detail the full database schema (see [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)), the API contract surface (see [11-API-STANDARDS](11-API-STANDARDS.md)), security controls (see [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md)), or infrastructure operations (see [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md)).
 
 **Status note:** Section 6 recommends a concrete stack. Per the roadmap's Phase 1 gate, **no implementation begins until this document (and the supporting design set) is approved.**
 
@@ -216,7 +216,7 @@ High-level layers and the modules within them.
 
 ## 10. Data Architecture
 
-- **Single canonical relational store** as the system of record (see [07-DATA-MODEL](07-DATA-MODEL.md)).
+- **Single canonical relational store** as the system of record (see [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)).
 - **Read models / projections** (search index, reporting warehouse) built from the canonical store via events — never written to directly by modules.
 - **Search index** for patient lookup and duplicate matching.
 - **Cache** for hot reads; cache invalidation is event-driven.
@@ -228,7 +228,7 @@ High-level layers and the modules within them.
 
 ## 11. API & Integration Architecture
 
-- **REST + OpenAPI** contracts; versioned (`/api/v1`, `/api/v2`); contract-first (see [08-API](08-API.md)).
+- **REST + OpenAPI** contracts; versioned (`/api/v1`, `/api/v2`); contract-first (see [11-API-STANDARDS](11-API-STANDARDS.md)).
 - **API Gateway** centralizes authN/Z, rate limiting, logging, and routing; individual services enforce their own authorization as defense in depth.
 - **Standard envelope** for responses and error handling; consistent pagination, filtering, and idempotency keys.
 - **Interoperability:** FHIR (R4) mapping for external exchange; HL7 where required; adapters isolate external specifics (see Phase 10).
@@ -248,7 +248,7 @@ High-level layers and the modules within them.
 
 ## 13. Security Architecture
 
-High-level; the authoritative control set is [09-SECURITY](09-SECURITY.md).
+High-level; the authoritative control set is [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md).
 
 - **Authentication:** OAuth 2.0 / OIDC, MFA-capable, session + refresh token handling.
 - **Authorization:** RBAC baseline with policy-based authorization for fine-grained rules; enforced at API layer and re-checked in services.
@@ -272,7 +272,7 @@ High-level; the authoritative control set is [09-SECURITY](09-SECURITY.md).
 
 ## 15. Infrastructure & Deployment View
 
-Operational detail is in [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md); the architectural view:
+Operational detail is in [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md); the architectural view:
 
 - **Environments:** local → dev → staging → production, promoted via artifact-driven CI/CD.
 - **Containers:** all components containerized; Compose for dev, orchestration (K8s) for production.
@@ -303,7 +303,7 @@ Operational detail is in [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md); the architec
 - **API:** OpenAPI 3.x; consistent envelope, errors, pagination.
 - **Logging:** structured JSON; correlation IDs; PII scrubbing.
 - **Metrics:** OpenTelemetry/Prometheus naming conventions.
-- **Data:** versioned migrations; naming conventions per [07-DATA-MODEL](07-DATA-MODEL.md).
+- **Data:** versioned migrations; naming conventions per [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md).
 - **Git:** trunk-based; short-lived branches; conventional commits; PR review.
 - **Code quality:** linting, formatting, coverage thresholds, dependency scans in CI.
 
@@ -332,10 +332,10 @@ Significant technical decisions are recorded as ADRs (in `docs/adr/` or the desi
 | [00-MASTER-ROADMAP](00-MASTER-ROADMAP.md) | Sequences this work; gate definitions |
 | [01-ENTERPRISE-VISION](01-ENTERPRISE-VISION.md) | Principles this architecture implements |
 | **02-SYSTEM-ARCHITECTURE (this)** | — |
-| [07-DATA-MODEL](07-DATA-MODEL.md) | Schema & data design (not yet written) |
-| [08-API](08-API.md) | API contract & versioning (not yet written) |
-| [09-SECURITY](09-SECURITY.md) | Security controls (not yet written) |
-| [10-INFRASTRUCTURE](10-INFRASTRUCTURE.md) | Deployment/ops (not yet written) |
+| [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md) | Database architecture & schema governance |
+| [11-API-STANDARDS](11-API-STANDARDS.md) | API contract & versioning standards |
+| [08-AUDIT-LOGGING](08-AUDIT-LOGGING.md) | Audit logging (security-relevant events) |
+| [16-DEPLOYMENT-STANDARDS](16-DEPLOYMENT-STANDARDS.md) | Deployment & operations standards |
 
 ---
 

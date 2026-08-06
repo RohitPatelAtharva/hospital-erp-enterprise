@@ -34,7 +34,7 @@
 
 This document defines the **minimum, enforceable coding standards** for the Hospital ERP Enterprise platform. It exists to ensure code is consistent, reviewable, testable, secure, and maintainable across all teams — and to make reviews deterministic rather than a matter of individual taste.
 
-**Scope:** source code in the primary languages of the platform, database/SQL, and the supporting workflow (Git, CI, review). It does **not** define architecture ([02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md)), technology selection ([03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md)), or schema design ([07-DATA-MODEL](07-DATA-MODEL.md)).
+**Scope:** source code in the primary languages of the platform, database/SQL, and the supporting workflow (Git, CI, review). It does **not** define architecture ([02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md)), technology selection ([03-TECHNOLOGY-STACK](03-TECHNOLOGY-STACK.md)), or schema design ([05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)).
 
 **Compliance model:** standards marked **MUST** are enforced (CI or review blocker). Standards marked **SHOULD** are strongly recommended; deviation requires a justified note in the PR. Standards marked **MAY** are optional guidance. (RFC 2119 key words.)
 
@@ -105,7 +105,7 @@ Standards apply per language; cross-cutting requirements (error handling, securi
 
 - **MUST** not swallow exceptions; handle them where the recovery action is known.
 - **MUST** fail fast on invalid input at boundaries; validate early.
-- **API errors** MUST use the standard error envelope defined in [08-API](08-API.md) (consistent codes, message, correlation id).
+- **API errors** MUST use the standard error envelope defined in [11-API-STANDARDS](11-API-STANDARDS.md) (consistent codes, message, correlation id).
 - **MUST** log errors with sufficient context (correlation id, operation, entity) and **MUST NOT** log PHI or secrets.
 - **MUST** use structured logging (JSON) per the observability standard.
 - **Async/integrations** MUST be idempotent and tolerant to retries; failures MUST surface to a dead-letter/alert path, never silently dropped.
@@ -144,7 +144,7 @@ Standards apply per language; cross-cutting requirements (error handling, securi
 
 - **MUST** avoid N+1 query patterns; batch where possible.
 - **MUST** paginate list endpoints; never return unbounded collections.
-- **SHOULD** index hot query paths (confirmed in schema design, [07-DATA-MODEL](07-DATA-MODEL.md)).
+- **SHOULD** index hot query paths (confirmed in schema design, [05-DATABASE-ARCHITECTURE](05-DATABASE-ARCHITECTURE.md)).
 - **MUST** use async I/O in the backend for I/O-bound work.
 - **MUST** not block the UI thread; use appropriate async/worker patterns on web/mobile.
 - **SHOULD** cache hot, immutable reads; invalidate on writes via events.
