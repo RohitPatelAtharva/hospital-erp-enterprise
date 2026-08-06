@@ -546,12 +546,13 @@ Scoring: **Impact** × **Likelihood** (1–5) → **Exposure** (Critical ≥ 16,
 
 | # | Document | Status |
 | --- | --- | --- |
-| 00 | **Master Roadmap (this file)** | ✅ Approved / Living |
-| 01 | Architecture | ◻️ Planned (Phase 1) |
-| 02 | Data Model & Database Design | ◻️ Planned (Phase 1) |
-| 03 | API Contract & Versioning | ◻️ Planned (Phase 1) |
-| 04 | Security & Compliance | ◻️ Planned (Phase 1) |
-| 05 | Infrastructure & Deployment | ◻️ Planned (Phase 1) |
+| 00 | **Master Roadmap** | ✅ Approved / Living |
+| 01 | **Enterprise Vision** | ✅ Approved / Living |
+| 02 | Architecture | ◻️ Planned (Phase 1) |
+| 03 | Data Model & Database Design | ◻️ Planned (Phase 1) |
+| 04 | API Contract & Versioning | ◻️ Planned (Phase 1) |
+| 05 | Security & Compliance | ◻️ Planned (Phase 1) |
+| 06 | Infrastructure & Deployment | ◻️ Planned (Phase 1) |
 | — | *(future docs added as phases are planned)* | — |
 
 ---
