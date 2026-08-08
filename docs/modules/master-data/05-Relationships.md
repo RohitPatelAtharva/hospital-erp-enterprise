@@ -86,13 +86,14 @@ The canonical entities from [04-Database-Tables](04-Database-Tables.md) §4, gro
 | Golden Record | GOLDEN_RECORD_LINK, GOLDEN_RECORD_SOURCE, GOLDEN_RECORD_AUDIT |
 | Merge/Survivorship | MERGE_EVENT, MERGE_RECORD, MERGE_APPROVAL, SURVIVORSHIP_RULE, SURVIVORSHIP_DECISION, ATTRIBUTE_PRIORITY |
 | Stewardship | STEWARD_ASSIGNMENT, QUALITY_ISSUE, REMEDIATION_TASK, STEWARDSHIP_LOG |
-| Reference Data | REFERENCE_VALUE, REFERENCE_CATEGORY, REFERENCE_VERSION |
+| Reference Data | REFERENCE_VALUE, REFERENCE_CATEGORY, REFERENCE_VERSION, CONSENT_TYPE, CREDENTIAL_TYPE, RELATION_TYPE |
 | Terminology | TERMINOLOGY_SERVICE, TERMINOLOGY_EDITION, TERMINOLOGY_ENTRY |
 | Audit Ref | AUDIT_REFERENCE, AUDIT_ACTION, AUDIT_ACTOR, AUDIT_RETENTION |
 | Import/Export | IMPORT_BATCH, IMPORT_STAGING_ROW, IMPORT_VALIDATION, EXPORT_BATCH, EXPORT_QUEUE_ITEM, EXPORT_RECIPIENT |
 | Integration | INTEGRATION_MAP, INTEGRATION_ENDPOINT, MAPPING_FIELD |
 | Cross Ref | CROSS_REFERENCE, XREF_TYPE, XREF_RESOLUTION |
 | Metadata/Version | METADATA_CATALOG, SCHEMA_METADATA, DATA_DICTIONARY, VERSION, VERSION_SNAPSHOT, VERSION_AUDIT |
+| Archival | ARCHIVE_TABLE, ARCHIVE_MANIFEST |
 
 ---
 
@@ -149,7 +150,7 @@ Each relationship is identified, with its source, target, FK, and cardinality.
 | R-04 | `master_record` | `staff` | `master_record_id` | 1 : N |
 | R-05 | `master_record` | `provider` | `master_record_id` | 1 : N |
 | R-06 | `master_record` | `organization` | `master_record_id` | 1 : N |
-| R-07 | `master_record` | `golden_record` | `master_record_id` | 1 : 1 |
+| R-07 | `master_record` | `golden_record` | `master_record_id` | 1 : 0..1 |
 | R-08 | `golden_record` | `golden_record_link` | `golden_record_id` | 1 : N |
 | R-09 | `golden_record_link` | `master_record` | `master_record_id` | N : 1 |
 | R-10 | `patient` | `patient_identifier` | `patient_id` | 1 : N |
@@ -160,16 +161,16 @@ Each relationship is identified, with its source, target, FK, and cardinality.
 | R-15 | `master_record` | `duplicate_candidate` | `master_record_id` | 1 : N |
 | R-16 | `duplicate_candidate` | `match_score` | `duplicate_candidate_id` | 1 : N |
 | R-17 | `match_rule` | `match_score` | `match_rule_id` | 1 : N |
-| R-18 | `match_rule` | `match_threshold` | `match_rule_id` | 1 : 1 |
-| R-19 | `duplicate_candidate` | `duplicate_review` | `duplicate_candidate_id` | 1 : 1 |
+| R-18 | `match_rule` | `match_threshold` | `match_rule_id` | 1 : 0..1 |
+| R-19 | `duplicate_candidate` | `duplicate_review` | `duplicate_candidate_id` | 1 : 0..1 |
 | R-20 | `merge_event` | `merge_record` | `merge_event_id` | 1 : N |
-| R-21 | `merge_event` | `merge_approval` | `merge_event_id` | 1 : 1 |
+| R-21 | `merge_event` | `merge_approval` | `merge_event_id` | 1 : 0..1 |
 | R-22 | `merge_event` | `survivorship_decision` | `merge_event_id` | 1 : N |
 | R-23 | `survivorship_rule` | `survivorship_decision` | `survivorship_rule_id` | 1 : N |
 | R-24 | `attribute_priority` | `survivorship_rule` | `attribute_priority_id` | 1 : N |
 | R-25 | `master_record` | `version` | `master_record_id` | 1 : N |
-| R-26 | `version` | `version_snapshot` | `version_id` | 1 : 1 |
-| R-27 | `version` | `version_audit` | `version_id` | 1 : 1 |
+| R-26 | `version` | `version_snapshot` | `version_id` | 1 : 0..1 |
+| R-27 | `version` | `version_audit` | `version_id` | 1 : 0..1 |
 | R-28 | `version_audit` | `audit_reference` | `audit_reference_id` | N : 1 |
 | R-29 | `golden_record` | `golden_record_audit` | `golden_record_id` | 1 : N |
 | R-30 | `golden_record_link` | `golden_record_source` | `golden_record_link_id` | 1 : N |
@@ -193,7 +194,7 @@ Each relationship is identified, with its source, target, FK, and cardinality.
 | R-48 | `contact_use` | `contact` | `contact_use_id` | 1 : N |
 | R-49 | `contact` | `contact_preference` | `contact_id` | 1 : N |
 | R-50 | `address_type` | `address` | `address_type_id` | 1 : N |
-| R-51 | `address` | `address_validation` | `address_id` | 1 : 1 |
+| R-51 | `address` | `address_validation` | `address_id` | 1 : 0..1 |
 | R-52 | `document_type` | `master_document` | `document_type_id` | 1 : N |
 | R-53 | `document_storage` | `master_document` | `document_storage_id` | 1 : N |
 | R-54 | `language` | `language_preference` | `language_id` | 1 : N |
@@ -207,7 +208,7 @@ Each relationship is identified, with its source, target, FK, and cardinality.
 | R-62 | `audit_action` | `audit_reference` | `audit_action_id` | 1 : N |
 | R-63 | `audit_actor` | `audit_reference` | `audit_actor_id` | 1 : N |
 | R-64 | `import_batch` | `import_staging_row` | `import_batch_id` | 1 : N |
-| R-65 | `import_staging_row` | `import_validation` | `import_staging_row_id` | 1 : 1 |
+| R-65 | `import_staging_row` | `import_validation` | `import_staging_row_id` | 1 : 0..1 |
 | R-66 | `export_batch` | `export_queue_item` | `export_batch_id` | 1 : N |
 | R-67 | `integration_endpoint` | `integration_map` | `integration_endpoint_id` | 1 : N |
 | R-68 | `integration_map` | `mapping_field` | `integration_map_id` | 1 : N |
@@ -221,6 +222,15 @@ Each relationship is identified, with its source, target, FK, and cardinality.
 | R-76 | `staff` | `steward_assignment` | `staff_id` | 1 : N |
 | R-77 | `quality_issue` | `remediation_task` | `quality_issue_id` | 1 : N |
 | R-78 | `quality_issue` | `stewardship_log` | `quality_issue_id` | 1 : N |
+| R-79 | `identity_type` | `patient_identifier` | `identity_type_id` | 1 : N |
+| R-80 | `consent_type` | `patient_consent` | `consent_type_id` | 1 : N |
+| R-81 | `consent_type` | `staff_consent` | `consent_type_id` | 1 : N |
+| R-82 | `credential_type` | `staff_credential` | `credential_type_id` | 1 : N |
+| R-83 | `credential_type` | `provider_credential` | `credential_type_id` | 1 : N |
+| R-84 | `relation_type` | `patient_relation` | `relation_type_id` | 1 : N |
+| R-85 | `relation_type` | `organization_relationship` | `relation_type_id` | 1 : N |
+| R-86 | `organization` | `provider_network` | `network_id` | 1 : N |
+| R-87 | `export_batch` | `export_recipient` | `export_batch_id` | 1 : N |
 
 ---
 

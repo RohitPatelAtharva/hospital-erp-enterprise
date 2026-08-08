@@ -132,6 +132,7 @@ Baseline roles (extensible; maintained as data per [07-ROLES-PERMISSIONS](../../
 | `export:run` | Run exports |
 | `integration:manage` | Manage integrations and mappings |
 | `masterdata:read` | View master registry + dashboard |
+| `purge:execute` | Governed purge/hard delete of a record (elevated) |
 | `audit:read` | View audit trail |
 
 ---
@@ -167,6 +168,7 @@ Baseline roles (extensible; maintained as data per [07-ROLES-PERMISSIONS](../../
 | `export:run` | · | ✓ | ✓ | · | ✓ | ✓ | · | · |
 | `integration:manage` | · | · | · | · | · | ✓ | · | · |
 | `masterdata:read` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `purge:execute` | · | ✓ | · | · | · | · | · | · |
 | `audit:read` | · | · | · | · | · | · | ✓ | · |
 
 ---
@@ -259,11 +261,12 @@ See matrix: `patients:read`, `patients:create`, `patients:update`. Deactivation 
 
 | Action | Requester | Approver |
 | --- | --- | --- |
-| Deactivate record | Registry Admin / Steward | Approver |
+| Deactivate record | Registrar / Registry Admin / Steward | Approver |
 | Merge | Registry Admin | Approver |
 | Unmerge | Registry Admin | Approver |
-| Purge / archive | Steward | Approver |
+| Purge / archive | Registry Admin | Approver |
 | Import apply | Importer | Approver (where elevated) |
+| Elevated reference change | Steward | Approver |
 
 > Requester and approver MUST be different principals ([07-ROLES-PERMISSIONS](../../07-ROLES-PERMISSIONS.md) §8).
 
@@ -278,6 +281,7 @@ See matrix: `patients:read`, `patients:create`, `patients:update`. Deactivation 
 | Purge / hard delete | Required |
 | Deactivate with active references | Required |
 | Elevated reference change | Required |
+| Import apply | Required |
 
 ---
 

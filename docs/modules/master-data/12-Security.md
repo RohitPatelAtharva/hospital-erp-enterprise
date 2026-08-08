@@ -103,8 +103,10 @@ Row-Level Security applies tenant isolation at the data layer ([05-DATABASE-ARCH
 | Table class | RLS policy |
 | --- | --- |
 | Tenant-scoped tables | `tenant_id = current_setting('app.tenant')` |
-| Global reference | Read-only shared |
+| Reference / lookup | Tenant-scoped (same policy; no cross-tenant shared tables) |
 | Audit | Restricted by tenant + role |
+
+> Every table in this module is tenant-scoped ([04-Database-Tables](04-Database-Tables.md) §4); there are no cross-tenant "global reference" tables. The Auditor role reads within the enforced tenant scope ([07-ROLES-PERMISSIONS](../../07-ROLES-PERMISSIONS.md) §9).
 
 ---
 
@@ -118,6 +120,8 @@ Row-Level Security applies tenant isolation at the data layer ([05-DATABASE-ARCH
 | No PHI in logs | Logging redaction ([§18](#18-logging)) |
 | No PHI in tokens | Identity-only tokens |
 
+> **PHI column classes.** PHI is carried by these column classes and is classified per table in [04-Database-Tables](04-Database-Tables.md): **identity** (`patient_identifier`/`staff_identifier`/`provider_identifier`/`organization_identifier` values), **demographic** (name, DOB, sex, address, contact), **consent** records, and **credential/relation** data. The most sensitive fields are additionally field-encrypted per [§8](#8-encryption); PHI is never written to logs or tokens (above).
+
 ---
 
 ## 8. Encryption
@@ -127,7 +131,7 @@ Row-Level Security applies tenant isolation at the data layer ([05-DATABASE-ARCH
 | In transit | TLS 1.2+ |
 | At rest | Storage encryption (AES-256) |
 | Field-level | Sensitive fields encrypted where required |
-| Keys | Managed KMS, rotation ([09-SECURITY](../../09-MULTI-TENANCY.md)) |
+| Keys | Managed KMS, rotation ([09-MULTI-TENANCY](../../09-MULTI-TENANCY.md)) |
 
 ---
 

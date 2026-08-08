@@ -64,7 +64,7 @@ The Master Data module is delivered incrementally. This document records **plann
 
 ## 4. Future Enhancements
 
-From [01-Business-Requirements](01-Business-Requirements.md) §18 (FR-01…FR-14).
+Future enhancements are cataloged in this document. Where one maps to a deferred or out-of-scope capability in [01-Business-Requirements](01-Business-Requirements.md) (§3.2 out-of-scope, §9 future work) or to the platform [00-MASTER-ROADMAP](../../00-MASTER-ROADMAP.md), the **Trigger** column records the dependency.
 
 | ID | Enhancement | Priority | Trigger |
 | --- | --- | --- | --- |

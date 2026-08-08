@@ -193,7 +193,7 @@ Dashboards give stakeholders an at-a-glance view of master-data health, duplicat
 | Golden coverage | §11 |
 | Quality index | §13 |
 | Approval SLA | [14-Notifications](14-Notifications.md) §19 |
-| Integration uptime | §14 |
+| Integration uptime | [15-Reports](15-Reports.md) §18 |
 
 ---
 

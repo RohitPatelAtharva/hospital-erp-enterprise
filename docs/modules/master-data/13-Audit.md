@@ -102,9 +102,12 @@ Events are defined per [08-AUDIT-LOGGING](../../08-AUDIT-LOGGING.md) §5, namesp
 | `md.master_record.updated` | Update |
 | `md.master_record.deactivated` | Deactivate |
 | `md.master_record.archived` | Archive |
+| `md.master_record.restored` | Restore |
+| `md.master_record.reactivated` | Reactivate |
 | `md.master_record.purged` | Purge |
 | `md.duplicate.candidate_created` | Detection |
 | `md.duplicate.reviewed` | Review |
+| `md.duplicate.threshold_changed` | Detection |
 | `md.merge.initiated` | Merge |
 | `md.merge.approved` | Merge |
 | `md.merge.rejected` | Merge |
@@ -112,10 +115,18 @@ Events are defined per [08-AUDIT-LOGGING](../../08-AUDIT-LOGGING.md) §5, namesp
 | `md.unmerge.executed` | Unmerge |
 | `md.golden.established` | Golden |
 | `md.golden.updated` | Golden |
+| `md.golden.link_changed` | Golden |
 | `md.approval.decided` | Approval |
+| `md.approval.mfa` | Approval |
+| `md.consent.changed` | Consent |
+| `md.identity.assigned` | Identity |
+| `md.stewardship.action_taken` | Stewardship |
+| `md.import.batch_started` | Import |
 | `md.import.applied` | Import |
+| `md.import.rollback` | Import |
 | `md.export.run` | Export |
 | `md.integration.changed` | Integration |
+| `md.cross_reference.changed` | Integration |
 
 ---
 

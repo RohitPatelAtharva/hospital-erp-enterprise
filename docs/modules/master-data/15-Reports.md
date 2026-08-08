@@ -290,7 +290,7 @@ Report outputs follow [17-DATA-GOVERNANCE](../../17-DATA-GOVERNANCE.md) §12 ret
 
 ## 25. Performance
 
-Report performance follows [14-PERFORMANCE-STANDARDS](../../14-PERFORMANCE-STANDARDS.md) and [19-Performance](19-Performance.md) §21 — pre-aggregated where needed; p95 sub-second for interactive ([19-Performance](19-Performance.md) §5).
+Report performance follows [14-PERFORMANCE-STANDARDS](../../14-PERFORMANCE-STANDARDS.md) and [19-Performance](19-Performance.md) §21 — pre-aggregated where needed; p95 < 2 s for interactive reports ([19-Performance](19-Performance.md) §5).
 
 ---
 

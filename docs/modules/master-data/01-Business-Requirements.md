@@ -209,7 +209,7 @@ Detailed functional behavior is specified in the module's Workflow ([02-Workflow
 
 | # | Category | Requirement |
 | --- | --- | --- |
-| NFR-01 | Performance | Patient search p95 < 1s ([14-PERFORMANCE-STANDARDS](../../14-PERFORMANCE-STANDARDS.md)) |
+| NFR-01 | Performance | Patient search p95 < 500 ms ([14-PERFORMANCE-STANDARDS](../../14-PERFORMANCE-STANDARDS.md)) |
 | NFR-02 | Availability | 99.9% target ([00-MASTER-ROADMAP](../../00-MASTER-ROADMAP.md) §2.2) |
 | NFR-03 | Security | OIDC; MFA for merge/admin ([06-AUTHENTICATION](../../06-AUTHENTICATION.md)) |
 | NFR-04 | Privacy | Consent-aware, least privilege ([17-DATA-GOVERNANCE](../../17-DATA-GOVERNANCE.md) §15) |

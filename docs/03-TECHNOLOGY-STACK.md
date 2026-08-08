@@ -3,8 +3,8 @@
 > **Document ID:** `03-TECHNOLOGY-STACK.md`
 > **Owner:** Architecture / Engineering Lead
 > **Status:** 🔄 Pending approval (Phase 1 gate)
-> **Version:** 1.0.0
-> **Last updated:** 2026-08-06
+> **Version:** 1.1.0
+> **Last updated:** 2026-08-08
 > **Relationship:** Locks the technology baseline proposed in [02-SYSTEM-ARCHITECTURE](02-SYSTEM-ARCHITECTURE.md). Authoritative on *what we build with*; the architecture doc is authoritative on *how we build*.
 
 ---
@@ -55,8 +55,8 @@ Every choice is tested against these principles (derived from the vision and arc
 
 | Layer | Choice | Status |
 | --- | --- | --- |
-| **Backend language/runtime** | ⚠️ C#/.NET (primary proposal) | Proposed |
-| **API framework** | ⚠️ .NET Web API | Proposed |
+| **Backend language/runtime** | ✅ PHP 8.2+ / Laravel 12 (LTS) | Approved |
+| **API framework** | ✅ Laravel REST API | Approved |
 | **Primary database** | ⚠️ PostgreSQL 16+ | Proposed |
 | **Search** | ⚠️ OpenSearch | Proposed |
 | **Cache** | ⚠️ Redis | Proposed |
@@ -77,16 +77,17 @@ Every choice is tested against these principles (derived from the vision and arc
 
 | Aspect | Detail |
 | --- | --- |
-| **Choice** | ⚠️ C#/.NET (LTS) |
-| **Rationale** | Strong typing & async, mature enterprise ecosystem, excellent performance, first-class DI/middleware, long-term support, large talent pool. |
-| **Alternatives** | Java/Spring (viable equivalent — final pick between the two at gate); Node/TS (higher velocity, weaker enterprise/clinical conventions); Go (great for infra, thinner domain ecosystem); Python (not preferred for this domain). |
-| **Consequence** | Pins backend conventions, test framework, and packaging to the .NET ecosystem. |
+| **Choice** | ✅ PHP 8.2+ / Laravel 12 (LTS) |
+| **Runtime requirement** | PHP `^8.2` (Laravel 12 requires PHP ≥ 8.2; verified at the Phase 1 gate) |
+| **Rationale** | Approved at the Phase 1 gate as the Phase-1 backend. Strong typing, mature ecosystem, first-class DI/middleware, robust API tooling, long-term support, large talent pool; JSON-first conventions fit the REST/OpenAPI surface. |
+| **Alternatives** | .NET / Java (viable equivalents — superseded proposal for the Phase-1 baseline); Node/TS (higher velocity, weaker enterprise/clinical conventions); Go (great for infra, thinner domain ecosystem); Python (not preferred for this domain). |
+| **Consequence** | Pins backend conventions, test framework, and packaging to the PHP/Laravel ecosystem. |
 
 ### 4.2 API framework
 
 | Aspect | Detail |
 | --- | --- |
-| **Choice** | ⚠️ .NET Web API (ASP.NET Core) |
+| **Choice** | ✅ Laravel REST API |
 | **Rationale** | REST, OpenAPI generation, middleware pipeline, built-in auth integration, performance. |
 | **Alternatives** | Spring Boot; Express; FastAPI. |
 
@@ -217,7 +218,7 @@ The following must be **explicitly approved** (or revised) to close the Phase 1 
 
 | # | Decision | Options | Recommendation |
 | --- | --- | --- | --- |
-| D1 | Backend language | .NET vs Java | .NET |
+| D1 | Backend language | PHP/Laravel vs .NET vs Java | ✅ PHP 8.2+ / Laravel 12 (Approved) |
 | D2 | Identity solution | Keycloak vs native OIDC | Keycloak (evaluate) |
 | D3 | Mobile framework | React Native vs Flutter | React Native |
 | D4 | Message bus | Kafka vs RabbitMQ | Kafka |
@@ -233,8 +234,8 @@ The following must be **explicitly approved** (or revised) to close the Phase 1 
 
 | ADR | Title | Status |
 | --- | --- | --- |
-| ADR-006 | Backend language/runtime selection | ⚠️ Pending |
-| ADR-002 | PostgreSQL as canonical store | ⚠️ Pending |
+| ADR-006 | Backend language/runtime selection (PHP 8.2+ / Laravel 12) | ✅ Approved |
+| ADR-002 | PostgreSQL as canonical store ([Phase 2 lock](adr/ADR-P2-001-MasterData-Architecture-Lock.md)) | ✅ Approved |
 | ADR-003 | OAuth 2.0/OIDC identity | ⚠️ Pending |
 | ADR-007 | Mobile cross-platform framework | ⚠️ Pending |
 | — | Message bus / search / caching | ⚠️ Pending |
@@ -246,6 +247,7 @@ The following must be **explicitly approved** (or revised) to close the Phase 1 
 | Date | Version | Author | Change |
 | --- | --- | --- | --- |
 | 2026-08-06 | 1.0.0 | Architecture | Created technology stack: selection principles, full component decisions with rationale/alternatives, versioning policy, standards, licensing, and the approval-gate decision list. |
+| 2026-08-08 | 1.1.0 | Architecture | Phase 1 gate: recorded PHP 8.2+ / Laravel 12 as the approved backend language/runtime (superseding the .NET proposal) and the PHP `^8.2` runtime requirement; updated API framework row and ADR-006. |
 
 ---
 

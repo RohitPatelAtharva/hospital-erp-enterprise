@@ -105,12 +105,12 @@ An aggregate root is the consistency boundary for a set of entities.
 
 | Aggregate Root | Members | Invariant |
 | --- | --- | --- |
-| `MasterRecord` | master_record, golden_record, version, cross_reference | One canonical identity per record |
+| `MasterRecord` | master_record, version, cross_reference | One canonical identity per record |
 | `Patient` | patient, patient_identifier, patient_demographic, patient_consent, patient_relation, patient_alias | Patient identity is consistent |
 | `Staff` | staff, staff_identifier, staff_credential, staff_demographic, staff_consent | Staff identity is consistent |
 | `Provider` | provider, provider_credential, provider_network, provider_identifier | Provider identity is consistent |
-| `Organization` | organization, organization_identifier, organization_contact, organization_relationship | Org identity is consistent |
-| `DuplicateCandidate` | duplicate_candidate, match_score, duplicate_review | A candidate is scored and reviewed |
+| `Organization` | organization, organization_identifier, organization_contact, organization_relationship, organization_type | Org identity is consistent |
+| `DuplicateCandidate` | duplicate_candidate, duplicate_review | A candidate is scored and reviewed (`match_score` is a value object) |
 | `GoldenRecord` | golden_record, golden_record_link, golden_record_source, golden_record_audit | Golden record is authoritative |
 | `MergeEvent` | merge_event, merge_record, merge_approval, survivorship_decision | Merge is approved and audited |
 
@@ -131,7 +131,7 @@ Entities have identity and lifecycle. Each maps to a table in [04-Database-Table
 | DuplicateCandidate | `duplicate_candidate` | DuplicateCandidate | |
 | MergeEvent | `merge_event` | MergeEvent | |
 
-> The full entity inventory (106 tables) is defined in [04-Database-Tables](04-Database-Tables.md) §4; this section names the domain-level entities.
+> The full entity inventory (109 tables) is defined in [04-Database-Tables](04-Database-Tables.md) §4; this section names the domain-level entities.
 
 ---
 
@@ -165,6 +165,8 @@ Domain services execute operations that do not naturally belong to a single enti
 | `StewardshipService` | Quality and remediation | BRS §23 |
 | `ApprovalService` | Route and record approvals | [02-Workflow](02-Workflow.md) §7 |
 
+> **Approval backing.** Merge/unmerge approvals are backed by `merge_approval`; approvals for other elevated actions (deactivate, purge, import apply, reference change) are backed by the platform approval workflow and recorded in the audit/version trail ([13-Audit](13-Audit.md) §10, [11-Permissions](11-Permissions.md) §20–§21) — no module-specific approval table.
+
 ---
 
 ## 8. Domain Events
@@ -182,6 +184,20 @@ Events capture state changes for audit and integration ([08-AUDIT-LOGGING](../..
 | `RecordsUnmerged` | Unmerge | Audit, consumers |
 | `StewardshipActionTaken` | Remediation | Audit |
 | `MasterRecordArchived` | Archive | Audit, storage |
+
+> **Event name mapping.** Domain events (CamelCase, above) map to the canonical namespaced audit events `md.*` in [13-Audit](13-Audit.md) §5, consumed by audit, notifications, and integrations ([14-Notifications](14-Notifications.md) §4, [18-Integrations](18-Integrations.md) §15). The `md.*` form is authoritative for outbound event payloads.
+
+| Domain event | Canonical `md.*` audit event(s) |
+| --- | --- |
+| `MasterRecordCreated` | `md.master_record.created` |
+| `MasterRecordUpdated` | `md.master_record.updated` |
+| `DuplicateDetected` | `md.duplicate.candidate_created` |
+| `DuplicateResolved` | `md.duplicate.reviewed` |
+| `GoldenRecordEstablished` | `md.golden.established` |
+| `RecordsMerged` | `md.merge.executed` |
+| `RecordsUnmerged` | `md.unmerge.executed` |
+| `StewardshipActionTaken` | `md.stewardship.action_taken` |
+| `MasterRecordArchived` | `md.master_record.archived` |
 
 ---
 
@@ -407,6 +423,7 @@ stateDiagram-v2
     Archived --> Active: Restore
     Archived --> Purged: Delete (governed)
     Active --> Purged: Delete (governed)
+    Inactive --> Purged: Delete (governed)
     Purged --> [*]
 ```
 

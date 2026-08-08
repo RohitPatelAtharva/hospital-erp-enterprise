@@ -127,6 +127,11 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/patients/{id}/consents` | GET/POST | `patients:read`/`patients:update` |
 | `/patients/{id}/relations` | GET/POST | `patients:read`/`patients:update` |
 | `/patients/{id}/aliases` | GET/POST | `patients:read`/`patients:update` |
+| `/patients/{id}/identifiers/{identifierId}/rotate` | POST | `patients:update` |
+| `/patients/{id}/archive` | POST | `patients:update` |
+| `/patients/{id}/restore` | POST | `patients:update` |
+| `/patients/{id}/reactivate` | POST | `patients:update` |
+| `/patients/{id}/purge` | POST | `purge:execute` (elevated) |
 
 ---
 
@@ -142,6 +147,11 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/staff/{id}/identifiers` | GET/POST | `staff:read`/`staff:update` |
 | `/staff/{id}/credentials` | GET/POST | `staff:read`/`staff:update` |
 | `/staff/{id}/consents` | GET/POST | `staff:read`/`staff:update` |
+| `/staff/{id}/identifiers/{identifierId}/rotate` | POST | `staff:update` |
+| `/staff/{id}/archive` | POST | `staff:update` |
+| `/staff/{id}/restore` | POST | `staff:update` |
+| `/staff/{id}/reactivate` | POST | `staff:update` |
+| `/staff/{id}/purge` | POST | `purge:execute` (elevated) |
 
 ---
 
@@ -156,6 +166,11 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/providers/{id}` | DELETE (deactivate) | `providers:update` + approval |
 | `/providers/{id}/credentials` | GET/POST | `providers:read`/`providers:update` |
 | `/providers/{id}/networks` | GET/POST | `providers:read`/`providers:update` |
+| `/providers/{id}/identifiers/{identifierId}/rotate` | POST | `providers:update` |
+| `/providers/{id}/archive` | POST | `providers:update` |
+| `/providers/{id}/restore` | POST | `providers:update` |
+| `/providers/{id}/reactivate` | POST | `providers:update` |
+| `/providers/{id}/purge` | POST | `purge:execute` (elevated) |
 
 ---
 
@@ -170,6 +185,11 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/organizations/{id}` | DELETE (deactivate) | `organizations:update` + approval |
 | `/organizations/{id}/contacts` | GET/POST | `organizations:read`/`organizations:update` |
 | `/organizations/{id}/identifiers` | GET/POST | `organizations:read`/`organizations:update` |
+| `/organizations/{id}/identifiers/{identifierId}/rotate` | POST | `organizations:update` |
+| `/organizations/{id}/archive` | POST | `organizations:update` |
+| `/organizations/{id}/restore` | POST | `organizations:update` |
+| `/organizations/{id}/reactivate` | POST | `organizations:update` |
+| `/organizations/{id}/purge` | POST | `purge:execute` (elevated) |
 
 ---
 
@@ -198,6 +218,9 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/search/providers` | GET | `providers:read` |
 | `/search/organizations` | GET | `organizations:read` |
 | `/search/master` | GET | `masterdata:read` |
+| `/enterprise-persons` | GET (list) | `masterdata:read` |
+| `/enterprise-persons/{id}` | GET | `masterdata:read` |
+| `/enterprise-persons` | POST (link/establish) | `merge:execute` |
 
 | Aspect | Detail |
 | --- | --- |
@@ -205,6 +228,8 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | Fuzzy | Name/demographic fuzzy ([06-ERD](06-ERD.md) §24) |
 | Result | Ranked matches + confidence |
 | Scope | Tenant-scoped |
+
+> **Enterprise Person Index (EPI).** `/enterprise-persons` resolves the cross-entity person index (MD-BR-005, [07-Domain-Model](07-Domain-Model.md) §18 `enterprise_person`) that links a person's patient/staff identities; list and query are read-scoped, and link/establish is a merge-family consolidation operation.
 
 ---
 
@@ -243,6 +268,9 @@ The Master Data API exposes canonical master-data operations over REST under `/a
 | `/merges/{id}/approve` | POST | `approval:review` |
 | `/merges/{id}/reject` | POST | `approval:review` |
 | `/merges/{id}/survivorship` | GET | `merge:read` |
+| `/survivorship-rules` | GET | `merge:read` |
+| `/survivorship-rules` | PATCH | `golden:manage` |
+| `/survivorship-rules/{id}/priority` | PATCH | `golden:manage` |
 
 ---
 

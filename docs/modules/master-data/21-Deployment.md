@@ -52,11 +52,12 @@ The Master Data module is deployed as part of the platform's modular monolith ([
 
 | Environment | Purpose |
 | --- | --- |
-| Dev | Local development (Docker Compose) |
-| Test | Automated testing |
-| Staging | Pre-prod validation |
+| Local | Developer iteration (Docker Compose) |
+| Dev | Integration, CI |
+| Staging | Pre-prod validation, UAT |
 | Production | Live |
-| DR | Disaster recovery |
+
+> **Environment model.** Aligned to the platform model ([16-DEPLOYMENT-STANDARDS](../../16-DEPLOYMENT-STANDARDS.md) §3, [00-MASTER-ROADMAP](../../00-MASTER-ROADMAP.md) §10): **Local, Dev, Staging, Production**. Automated tests run in CI within the Dev environment; Disaster Recovery is a recovery capability ([15](#15-disaster-recovery)), not a separate environment.
 
 ---
 

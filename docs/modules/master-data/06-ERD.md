@@ -91,7 +91,7 @@ All entities are defined in [04-Database-Tables](04-Database-Tables.md) §4. Gro
 | Golden Record | GOLDEN_RECORD_LINK, GOLDEN_RECORD_SOURCE, GOLDEN_RECORD_AUDIT | §20 |
 | Merge/Survivorship | MERGE_EVENT, MERGE_RECORD, MERGE_APPROVAL, SURVIVORSHIP_RULE, SURVIVORSHIP_DECISION, ATTRIBUTE_PRIORITY | §21/§22 |
 | Stewardship | STEWARD_ASSIGNMENT, QUALITY_ISSUE, REMEDIATION_TASK, STEWARDSHIP_LOG | §23 |
-| Reference Data | REFERENCE_VALUE, REFERENCE_CATEGORY, REFERENCE_VERSION | §24 |
+| Reference Data | REFERENCE_VALUE, REFERENCE_CATEGORY, REFERENCE_VERSION, CONSENT_TYPE, CREDENTIAL_TYPE, RELATION_TYPE | §24 |
 | Terminology | TERMINOLOGY_SERVICE, TERMINOLOGY_EDITION, TERMINOLOGY_ENTRY | §25 |
 | Audit Ref | AUDIT_REFERENCE, AUDIT_ACTION, AUDIT_ACTOR, AUDIT_RETENTION | §26 |
 | Import/Export | IMPORT_BATCH, IMPORT_STAGING_ROW, IMPORT_VALIDATION, EXPORT_BATCH, EXPORT_QUEUE_ITEM, EXPORT_RECIPIENT | §27/§28 |
@@ -131,7 +131,7 @@ erDiagram
     GOLDEN_RECORD ||--o{ GOLDEN_RECORD_LINK : "links (R-08)"
     GOLDEN_RECORD_LINK }o--|| MASTER_RECORD : "references (R-09)"
     PATIENT ||--o{ PATIENT_IDENTIFIER : "has (R-10)"
-    PATIENT ||--o{ DUPLICATE_CANDIDATE : "generates (R-15)"
+    PATIENT ||--o{ DUPLICATE_CANDIDATE : "generates (R-15 lineage)"
     MASTER_RECORD ||--o{ DUPLICATE_CANDIDATE : "candidate (R-15)"
     DUPLICATE_CANDIDATE ||--o{ MATCH_SCORE : "scored (R-16)"
     MATCH_RULE ||--o{ MATCH_SCORE : "applies (R-17)"
@@ -181,7 +181,9 @@ erDiagram
     PATIENT ||--o{ PATIENT_CONSENT : "has (R-12)"
     PATIENT ||--o{ PATIENT_ALIAS : "alias (R-14)"
     PATIENT ||--o{ PATIENT_RELATION : "relates (R-13)"
-    IDENTITY_TYPE ||--o{ PATIENT_IDENTIFIER : "types (R-44)"
+    IDENTITY_TYPE ||--o{ PATIENT_IDENTIFIER : "types (R-79)"
+    CONSENT_TYPE ||--o{ PATIENT_CONSENT : "types (R-80)"
+    RELATION_TYPE ||--o{ PATIENT_RELATION : "types (R-84)"
 ```
 
 | Relationship | R-ID | FK | Cardinality |
@@ -192,7 +194,9 @@ erDiagram
 | patient → patient_consent | R-12 | `patient_id` | 1 : N |
 | patient → patient_alias | R-14 | `patient_id` | 1 : N |
 | patient → patient_relation | R-13 | `patient_id` | 1 : N |
-| identity_type → patient_identifier | R-44 | `identity_type_id` | 1 : N |
+| identity_type → patient_identifier | R-79 | `identity_type_id` | 1 : N |
+| consent_type → patient_consent | R-80 | `consent_type_id` | 1 : N |
+| relation_type → patient_relation | R-84 | `relation_type_id` | 1 : N |
 
 ---
 
@@ -212,6 +216,9 @@ erDiagram
     PROVIDER ||--o{ PROVIDER_CREDENTIAL : "holds"
     PROVIDER ||--o{ PROVIDER_NETWORK : "in"
     ORGANIZATION ||--o{ PROVIDER_NETWORK : "network"
+    CONSENT_TYPE ||--o{ STAFF_CONSENT : "types (R-81)"
+    CREDENTIAL_TYPE ||--o{ STAFF_CREDENTIAL : "types (R-82)"
+    CREDENTIAL_TYPE ||--o{ PROVIDER_CREDENTIAL : "types (R-83)"
 ```
 
 | Relationship | R-ID | FK | Cardinality | Note |
@@ -225,7 +232,10 @@ erDiagram
 | provider → provider_identifier | — | `provider_id` | 1 : N | Provider master group (04 §8) |
 | provider → provider_credential | — | `provider_id` | 1 : N | |
 | provider → provider_network | — | `provider_id` | 1 : N | |
-| organization → provider_network | — | `network_id` | 1 : N | Network is an organization |
+| organization → provider_network | R-86 | `network_id` | 1 : N | Network is an organization |
+| consent_type → staff_consent | R-81 | `consent_type_id` | 1 : N | |
+| credential_type → staff_credential | R-82 | `credential_type_id` | 1 : N | |
+| credential_type → provider_credential | R-83 | `credential_type_id` | 1 : N | |
 
 > **Note:** Staff/provider subgroup relationships (no R-ID) are defined in [05-Relationships](05-Relationships.md) §11. `provider_network` links to `organization` (network role-played relationship, [05-Relationships](05-Relationships.md) §22).
 
@@ -242,6 +252,7 @@ erDiagram
     ORGANIZATION ||--o{ ORGANIZATION_IDENTIFIER : "has (R-33)"
     ORGANIZATION ||--o{ ORGANIZATION_CONTACT : "contacts (R-32)"
     ORGANIZATION ||--o{ ORGANIZATION_RELATIONSHIP : "relates (R-34)"
+    RELATION_TYPE ||--o{ ORGANIZATION_RELATIONSHIP : "types (R-85)"
 ```
 
 | Relationship | R-ID | FK | Cardinality |
@@ -251,6 +262,7 @@ erDiagram
 | organization → organization_identifier | R-33 | `organization_id` | 1 : N |
 | organization → organization_contact | R-32 | `organization_id` | 1 : N |
 | organization → organization_relationship | R-34 | `organization_id` | 1 : N |
+| relation_type → organization_relationship | R-85 | `relation_type_id` | 1 : N |
 
 ---
 
@@ -386,7 +398,7 @@ Mirrors [05-Relationships](05-Relationships.md) §15.
 
 ```mermaid
 erDiagram
-    PATIENT ||--o{ DUPLICATE_CANDIDATE : "generates (R-15)"
+    PATIENT ||--o{ DUPLICATE_CANDIDATE : "generates (R-15 lineage)"
     MASTER_RECORD ||--o{ DUPLICATE_CANDIDATE : "candidate (R-15)"
     DUPLICATE_CANDIDATE ||--o{ MATCH_SCORE : "scored (R-16)"
     MATCH_RULE ||--o{ MATCH_SCORE : "applies (R-17)"

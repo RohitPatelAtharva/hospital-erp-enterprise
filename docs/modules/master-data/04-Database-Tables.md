@@ -62,7 +62,7 @@
 
 This document is the **canonical database specification** for the Master Data Management module. It defines the enterprise tables that hold canonical master records, indexing (MPI/EPI), duplicate detection, golden records, merge history, reference data, metadata, import/export staging, and audit. It defines **what** is stored and **how** records relate — not **how** they are implemented.
 
-The schema comprises **106 tables** — 104 organized into 28 logical groups plus 2 archival governance tables (`archive_table`, `archive_manifest`) — all tenant-scoped, most soft-deletable and versioned, with per-table PHI classification, retention, and growth.
+The schema comprises **109 tables** — 107 organized into 28 logical groups plus 2 archival governance tables (`archive_table`, `archive_manifest`) — all tenant-scoped, most soft-deletable and versioned, with per-table PHI classification, retention, and growth.
 
 ---
 
@@ -94,6 +94,10 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 | Version | `version` / separate version table |
 | Constraint names | `pk_<table>`, `fk_<child>_<parent>`, `uq_<table>_<cols>`, `ix_<table>_<cols>` |
 
+> **Cross-module references.** Columns named `actor_id` (and `reported_by`/`assignee_id`/`approver_id`) reference the **canonical actor/identity** managed by the platform IAM ([06-AUTHENTICATION](../../06-AUTHENTICATION.md), [07-ROLES-PERMISSIONS](../../07-ROLES-PERMISSIONS.md)); they are not defined in this schema. `source_system_id` references the **integration source-system** registry ([18-Integrations](18-Integrations.md)); the module's own `audit_actor` (§26) is the audit-side actor reference. These are cross-module references, not local FK targets.
+
+> **Candidate keys.** Candidate keys MUST reference the exact FK column name declared in the same table (per `FK = <parent>_id`). Any abbreviated reference (e.g. candidate key `category_id` where the FK column is `reference_category_id`) is a naming drift to be normalized at implementation.
+
 ---
 
 ## 4. Table Categories
@@ -119,7 +123,7 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 | 17 | Merge History | 3 |
 | 18 | Survivorship | 3 |
 | 19 | Data Stewardship | 4 |
-| 20 | Reference Data | 3 |
+| 20 | Reference Data | 6 |
 | 21 | Terminology | 3 |
 | 22 | Audit Reference | 4 |
 | 23 | Import Staging | 3 |
@@ -128,7 +132,7 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 | 26 | Cross Reference | 3 |
 | 27 | Metadata | 3 |
 | 28 | Version | 3 |
-| — | **Total** | **104** |
+| — | **Total** | **107** |
 
 ---
 
@@ -275,7 +279,7 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 | Candidate Keys | `master_record_id` |
 | Unique Constraints | — |
 | Indexes | `ix_patient_name`, `ix_patient_dob`, `ix_patient_sex` |
-| Relationships | 1:N patient_identifier, patient_demographic, patient_consent, patient_alias; N:1 golden_record |
+| Relationships | 1:N patient_identifier, patient_demographic, patient_consent, patient_alias; N:1 master_record (golden linkage via `master_record`) |
 | Lifecycle | draft → active → inactive → archived |
 | Retention | Per class ([17-DATA-GOVERNANCE](../../17-DATA-GOVERNANCE.md) §16) |
 | Tenant Scope | Yes |
@@ -1806,6 +1810,8 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 
 ## 24. Reference Data Tables
 
+> **Naming note.** This module's `reference_value` is the **enterprise-level** reference table, distinct from the facility-scoped `reference_value` in the Hospital Setup module. At implementation the two tables MUST be fully qualified to avoid a name collision.
+
 ### Table: `reference_value`
 | Attribute | Detail |
 | --- | --- |
@@ -1861,6 +1867,69 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 | Indexes | — |
 | Relationships | 1:N reference_value |
 | Lifecycle | active → archived |
+| Retention | Indefinite |
+| Tenant Scope | Yes |
+| PHI Classification | Internal |
+| Audit Required | Yes |
+| Soft Delete | Yes |
+| Versioned | Yes |
+| Estimated Growth | Low |
+
+### Table: `consent_type`
+| Attribute | Detail |
+| --- | --- |
+| Purpose | Typed vocabulary of patient/staff consent categories |
+| Business Owner | Data Governance Board |
+| Description | Consent categories (e.g., treatment, disclosure, research) |
+| Primary Key | `id` |
+| Foreign Keys | `tenant_id` |
+| Candidate Keys | `code` |
+| Unique Constraints | `uq_consent_type_tenant_code` |
+| Indexes | `ix_consent_type_code` |
+| Relationships | 1:N patient_consent; 1:N staff_consent |
+| Lifecycle | active → inactive |
+| Retention | Indefinite |
+| Tenant Scope | Yes |
+| PHI Classification | Internal |
+| Audit Required | Yes |
+| Soft Delete | Yes |
+| Versioned | Yes |
+| Estimated Growth | Low |
+
+### Table: `credential_type`
+| Attribute | Detail |
+| --- | --- |
+| Purpose | Typed vocabulary of staff/provider credentials & licenses |
+| Business Owner | Data Governance Board |
+| Description | Credential types (e.g., license, certification, registration) |
+| Primary Key | `id` |
+| Foreign Keys | `tenant_id` |
+| Candidate Keys | `code` |
+| Unique Constraints | `uq_credential_type_tenant_code` |
+| Indexes | `ix_credential_type_code` |
+| Relationships | 1:N staff_credential; 1:N provider_credential |
+| Lifecycle | active → inactive |
+| Retention | Indefinite |
+| Tenant Scope | Yes |
+| PHI Classification | Internal |
+| Audit Required | Yes |
+| Soft Delete | Yes |
+| Versioned | Yes |
+| Estimated Growth | Low |
+
+### Table: `relation_type`
+| Attribute | Detail |
+| --- | --- |
+| Purpose | Typed vocabulary of patient/patient and organization/organization relationships |
+| Business Owner | Data Governance Board |
+| Description | Relation types (e.g., next-of-kin, guarantor, subsidiary) |
+| Primary Key | `id` |
+| Foreign Keys | `tenant_id` |
+| Candidate Keys | `code` |
+| Unique Constraints | `uq_relation_type_tenant_code` |
+| Indexes | `ix_relation_type_code` |
+| Relationships | 1:N patient_relation; 1:N organization_relationship |
+| Lifecycle | active → inactive |
 | Retention | Indefinite |
 | Tenant Scope | Yes |
 | PHI Classification | Internal |
@@ -2502,6 +2571,7 @@ The schema comprises **106 tables** — 104 organized into 28 logical groups plu
 erDiagram
     MASTER_RECORD ||--o{ PATIENT : is
     MASTER_RECORD ||--o{ STAFF : is
+    MASTER_RECORD ||--o{ PROVIDER : is
     MASTER_RECORD ||--o{ ORGANIZATION : is
     GOLDEN_RECORD ||--o{ GOLDEN_RECORD_LINK : contains
     GOLDEN_RECORD_LINK }o--|| MASTER_RECORD : references
@@ -2521,7 +2591,7 @@ erDiagram
 
 | From | To | Cardinality |
 | --- | --- | --- |
-| master_record | patient/staff/org | 1:N |
+| master_record | patient/staff/provider/org | 1:N |
 | golden_record | golden_record_link | 1:N |
 | golden_record_link | master_record | N:1 |
 | patient | patient_identifier/consent/alias | 1:N |

@@ -46,6 +46,8 @@ The Master Data Management module governs the **operational lifecycle of master 
 
 This specification defines the complete, deterministic behavior of those flows, including triggers, states, actors, approvals, audit, and recovery guarantees.
 
+> **Bulk data flows.** Import/export bulk workflows are specified in [17-Import-Export](17-Import-Export.md) (§20 staging, §21 queue/rollback) and follow the same state, approval, and audit guarantees above.
+
 ```mermaid
 flowchart TB
     CREATE[Create] --> UPDATE[Update]
@@ -114,6 +116,11 @@ stateDiagram-v2
 | Inactive | Deactivated, history preserved | Yes |
 | Archived | Moved to archival store | Yes |
 | Purged | Irreversibly removed (governed) | Yes |
+
+> **Entity sub-states.** The five states above are the canonical **master-record** lifecycle. Not every entity uses all five:
+> - **Reference/config and integration entities** (`reference_value`, `hospital_config`, integration endpoints, mappings, cross-references) use **`active → inactive`** only (no Draft/Archived/Purged); per [07-Domain-Model](07-Domain-Model.md) §17/§23.
+> - **Append-only entities** (import/export batches, merge events, versions, audit) have **no state machine**; they are created in a terminal state ([17-Import-Export](17-Import-Export.md) §20).
+> - **Integration status markers:** integration endpoints/mappings/cross-references follow `active → inactive`; there is **no `pending` record state** — pending approval is represented by the approval workflow ([7](#7-approval-workflow)), not by a record state.
 
 ---
 

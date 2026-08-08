@@ -79,6 +79,7 @@ The module identifies, scores, and mitigates risks using the platform approach (
 | RK-10 | Unauthorized elevation | Low | High | MFA + SoD ([11-Permissions](11-Permissions.md) §20–§21) | Security |
 | RK-11 | Compliance/retention non-compliance | Medium | High | Retention + audit ([13-Audit](13-Audit.md) §17) | Compliance |
 | RK-12 | Migration data loss | Medium | Critical | Migration tests + backup ([21-Deployment](21-Deployment.md) §12) | Engineering |
+| RK-13 | Identifier spoofing / impersonation | Medium | High | Issuer + issuer-verification on assignment and rotation, cross-reference review ([06-ERD](06-ERD.md) §13, [10-API](10-API.md) §7) | Registry Admin |
 
 ---
 
