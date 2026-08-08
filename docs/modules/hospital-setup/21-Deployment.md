@@ -342,7 +342,7 @@ flowchart LR
 | Aspect | Decision |
 | --- | --- |
 | Versioning | Semantic versioning |
-| Release notes | Changelog per release ([24-Changelog](24-Changelog.md), forward) |
+| Release notes | Changelog per release ([23-Changelog](23-Changelog.md)) |
 | Approval | Gate before production |
 | Schedule | Release cadence per roadmap |
 | Communication | Stakeholder notification ([14-Notifications](14-Notifications.md)) |

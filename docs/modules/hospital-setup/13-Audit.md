@@ -285,7 +285,7 @@ This gives a complete, auditable chain from proposal to effect.
 | Periodic review | Compliance check of structure + audit |
 | Unauthorized-change detection | Alerts on denied attempts |
 
-Reports align with [16-Reports](16-Reports.md) (forward reference).
+Reports align with [15-Reports](15-Reports.md).
 
 ---
 

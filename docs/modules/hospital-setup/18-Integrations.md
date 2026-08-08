@@ -280,7 +280,7 @@ flowchart LR
 | --- | --- |
 | Relevance | **Not in v1** for setup notifications — WhatsApp business messaging is evaluated as a future notification channel. |
 | Reference | Follows the same channel-adapter pattern as email/SMS ([14-Notifications](14-Notifications.md) §3). |
-| Future | [25-Future-Roadmap](25-Future-Roadmap.md). |
+| Future | [24-Future-Roadmap](24-Future-Roadmap.md). |
 
 ---
 

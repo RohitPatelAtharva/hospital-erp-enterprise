@@ -46,7 +46,7 @@ This document specifies **how the Hospital Setup module notifies its users** of 
 
 **In scope:** notification types, event sources, delivery channels, templates, preferences, escalation, retry, queueing, failure handling, rate limiting, security, audit, monitoring, reports, and KPIs for the Hospital Setup module.
 
-**Out of scope:** the platform notification infrastructure itself (see [02-SYSTEM-ARCHITECTURE](../../02-SYSTEM-ARCHITECTURE.md) §12), email/SMS provider integration details (see [19-Integrations](19-Integrations.md), forward reference), and notifications for other modules.
+**Out of scope:** the platform notification infrastructure itself (see [02-SYSTEM-ARCHITECTURE](../../02-SYSTEM-ARCHITECTURE.md) §12), email/SMS provider integration details (see [18-Integrations](18-Integrations.md)), and notifications for other modules.
 
 ### 2.1 Notification Surface
 
@@ -406,7 +406,7 @@ Reports align with [15-Reports](15-Reports.md).
 | [02-SYSTEM-ARCHITECTURE](../../02-SYSTEM-ARCHITECTURE.md) | Eventing/observability | Consumes |
 | [03-TECHNOLOGY-STACK](../../03-TECHNOLOGY-STACK.md) | Event bus, Redis | Consumes |
 | [09-MULTI-TENANCY](../../09-MULTI-TENANCY.md) | Tenant isolation | Consumes |
-| [19-Integrations](19-Integrations.md) | Channel provider integration | Consumes |
+| [18-Integrations](18-Integrations.md) | Channel provider integration | Consumes |
 
 ---
 
