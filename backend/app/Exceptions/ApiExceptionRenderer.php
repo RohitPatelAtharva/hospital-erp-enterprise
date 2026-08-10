@@ -50,8 +50,21 @@ final class ApiExceptionRenderer
         }
 
         if ($exception instanceof HttpExceptionInterface) {
+            // Gate::authorize / the `can:` middleware raise AccessDeniedHttpException
+            // (403) and UnauthorizedHttpException (401), which are not
+            // AuthorizationException/AuthenticationException. Likewise Laravel's
+            // exception handler converts ModelNotFoundException into a 404
+            // NotFoundHttpException before this renderer runs. Map their status
+            // codes to the documented semantic codes (docs/11-API-STANDARDS.md §6).
+            $code = match ($exception->getStatusCode()) {
+                401 => 'UNAUTHENTICATED',
+                403 => 'FORBIDDEN',
+                404 => 'NOT_FOUND',
+                default => 'HTTP_ERROR',
+            };
+
             return ApiResponse::error(
-                'HTTP_ERROR',
+                $code,
                 $exception->getMessage() !== '' ? $exception->getMessage() : 'Request failed.',
                 status: $exception->getStatusCode(),
             );
