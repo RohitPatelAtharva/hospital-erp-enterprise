@@ -1126,15 +1126,15 @@ The schema comprises **109 tables** — 107 organized into 28 logical groups plu
 ### Table: `address`
 | Attribute | Detail |
 | --- | --- |
-| Purpose | Entity addresses |
+| Purpose | Reusable, type-addressable address records |
 | Business Owner | Data Governance Board |
 | Description | Reusable address records with validation status |
 | Primary Key | `id` |
 | Foreign Keys | `tenant_id`; `address_type_id`; `postal_code_id` |
 | Candidate Keys | — |
 | Unique Constraints | — |
-| Indexes | `ix_address_postal`, `ix_address_entity` |
-| Relationships | 1:N entity address links |
+| Indexes | `ix_address_postal` |
+| Relationships | address_type 1:N address; address 1:0..1 address_validation |
 | Lifecycle | active → inactive |
 | Retention | Per class |
 | Tenant Scope | Yes |
