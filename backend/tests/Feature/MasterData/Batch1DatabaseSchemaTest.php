@@ -123,9 +123,13 @@ final class Batch1DatabaseSchemaTest extends TestCase
 
     public function test_foreign_keys_exist_with_restrict(): void
     {
+        // Scoped to Batch 1's own tables so the count stays meaningful and
+        // stable as later batches (Batch 2A and beyond) add their own FKs.
+        $tables = implode("','", self::TABLES);
         $rows = DB::select(
             "SELECT conrelid::regclass AS tbl, pg_get_constraintdef(oid) AS def
-             FROM pg_constraint WHERE contype='f' AND connamespace='public'::regnamespace"
+             FROM pg_constraint WHERE contype='f' AND connamespace='public'::regnamespace
+             AND conrelid::regclass::text IN ('{$tables}')"
         );
         $this->assertCount(20, $rows, 'Expected 20 foreign keys in Batch 1.');
 

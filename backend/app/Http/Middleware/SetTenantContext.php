@@ -8,7 +8,6 @@ use App\Tenancy\TenantContext;
 use Closure;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -36,7 +35,11 @@ final class SetTenantContext
         $facilityId = $this->principalFacilityId($user);
 
         if ($tenantId === null || $facilityId === null) {
-            Auth::logout();
+            // No tenant/facility scope -> deny. Note: do not call Auth::logout()
+            // here; the Sanctum RequestGuard has no logout() method and it would
+            // raise "Method RequestGuard::logout does not exist". The exception
+            // alone rejects the request (403) and the request guard is recreated
+            // per request anyway.
             throw new AuthorizationException('Principal has no assigned tenant/facility scope.');
         }
 

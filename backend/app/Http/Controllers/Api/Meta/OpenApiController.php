@@ -71,6 +71,30 @@ final class OpenApiController extends Controller
                     'responses' => ['204' => ['description' => 'No content']],
                 ],
             ],
+
+            // --- Master Data aggregate lists (10-API §7-§12) --------------
+            '/api/v1/patients' => $this->collection('List patients'),
+            '/api/v1/staff' => $this->collection('List staff'),
+            '/api/v1/providers' => $this->collection('List providers'),
+            '/api/v1/organizations' => $this->collection('List organizations'),
+            '/api/v1/reference-categories' => $this->collection('List reference categories'),
+            '/api/v1/reference-values' => $this->collection('List reference values'),
+            '/api/v1/enterprise-persons' => $this->collection('List enterprise persons'),
+        ];
+    }
+
+    /**
+     * A read-only list operation (GET) for a Master Data resource.
+     *
+     * @return array{get: array{summary: string, responses: array{200: array{description: string}}}}
+     */
+    private function collection(string $summary): array
+    {
+        return [
+            'get' => [
+                'summary' => $summary,
+                'responses' => ['200' => ['description' => 'Paginated list']],
+            ],
         ];
     }
 }
