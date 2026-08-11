@@ -80,16 +80,18 @@ abstract class BaseMasterDataService
     /**
      * Transition the record between lifecycle states (02-Workflow.md §4).
      *
-     * Lifecycle states are stored in the canonical `status` column. Transitions
-     * are validated against the documented state machine and every change is
-     * audited under the canonical event prefix.
+     * Lifecycle states are stored in the canonical `status` column. The current
+     * persisted state is validated against the documented set of allowed source
+     * states and every change is audited under the canonical event prefix.
      *
-     * @param  array<string, string>  $allowed  state => audit suffix
+     * @param  list<string>  $allowedSources  source states from which this transition is legal
      */
-    protected function transition(Model $model, string $to, array $allowed, string $suffix): Model
+    protected function transition(Model $model, string $to, array $allowedSources, string $suffix): Model
     {
-        if (! in_array($to, $allowed, true)) {
-            throw new \InvalidArgumentException("Cannot transition [{$model->status}] to [{$to}].");
+        $current = (string) ($model->status ?? $model->getRawOriginal('status'));
+
+        if (! in_array($current, $allowedSources, true)) {
+            throw new \InvalidArgumentException("Cannot transition [{$current}] to [{$to}].");
         }
 
         return DB::transaction(function () use ($model, $to, $suffix): Model {

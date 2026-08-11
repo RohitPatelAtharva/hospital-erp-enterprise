@@ -24,6 +24,16 @@ final class VersionController
     {
         $versions = $this->service->forMasterRecord($masterRecordId);
 
-        return ApiResponse::success($versions);
+        return ApiResponse::paginated($versions);
+    }
+
+    public function show(string $id, string $vid): JsonResponse
+    {
+        return ApiResponse::data($this->service->find($vid));
+    }
+
+    public function diff(string $id, string $vid): JsonResponse
+    {
+        return ApiResponse::data($this->service->diff($vid));
     }
 }

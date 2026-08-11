@@ -60,4 +60,39 @@ final class VersionService
             return $next;
         });
     }
+
+    /**
+     * A single version by id (10-API §18 `{vid}`).
+     */
+    public function find(string $versionId): \Illuminate\Database\Eloquent\Model
+    {
+        return $this->repository->newQuery()->findOrFail($versionId);
+    }
+
+    /**
+     * Compare a version against its immediate predecessor for the same master
+     * record (10-API §18 `{vid}/diff`).
+     *
+     * The current schema stores version metadata only (no snapshot payload
+     * column), so the diff reports the change envelope (version numbers, actor,
+     * timestamps) rather than field-level payload differences.
+     */
+    public function diff(string $versionId): array
+    {
+        $version = $this->repository->newQuery()->findOrFail($versionId);
+
+        $previous = $this->repository->newQuery()
+            ->where('master_record_id', $version->master_record_id)
+            ->where('version_number', '<', $version->version_number)
+            ->orderByDesc('version_number')
+            ->first();
+
+        return [
+            'current' => $version->only(['id', 'master_record_id', 'actor_id', 'version_number', 'occurred_at']),
+            'previous' => $previous?->only(['id', 'actor_id', 'version_number', 'occurred_at']),
+            'delta' => $previous === null
+                ? ['type' => 'initial']
+                : ['type' => 'revision', 'from' => $previous->version_number, 'to' => $version->version_number],
+        ];
+    }
 }
