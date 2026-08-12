@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookMarked, Plus, RefreshCw, Filter } from 'lucide-react';
+import { Plus, RefreshCw, Filter, ListTree } from 'lucide-react';
 import { PageContainer } from '@/components/layout/page-container';
 import { PageHeader } from '@/components/layout/page-header';
 import { Button } from '@/components/ui/button';
@@ -14,9 +14,9 @@ import {
 import { DataTable, type DataTableColumn } from '@/components/data-table/data-table';
 import { Pagination } from '@/components/data-table/pagination';
 import { ReferenceStatusBadge } from '@/components/reference/reference-status-badge';
-import { useReferenceCategories } from '@/hooks/use-reference-categories';
+import { useReferenceValues } from '@/hooks/use-reference-values';
 import { formatDate } from '@/lib/utils';
-import type { ReferenceCategory, ReferenceStatus } from '@/lib/reference-data-types';
+import type { ReferenceStatus, ReferenceValue } from '@/lib/reference-data-types';
 
 const FILTER_OPTIONS: { label: string; value: ReferenceStatus | '' }[] = [
   { label: 'All statuses', value: '' },
@@ -24,41 +24,39 @@ const FILTER_OPTIONS: { label: string; value: ReferenceStatus | '' }[] = [
   { label: 'Inactive', value: 'inactive' },
 ];
 
-export function ReferenceDataPage() {
+export function ReferenceValuesPage() {
   const [status, setStatus] = useState<ReferenceStatus | ''>('');
 
-  const { categories, loading, error, refresh, page, pageSize, total, setPage } =
-    useReferenceCategories({ status });
+  const { values, loading, error, refresh, page, pageSize, total, setPage } = useReferenceValues({ status });
 
-  const columns: DataTableColumn<ReferenceCategory>[] = [
+  const columns: DataTableColumn<ReferenceValue>[] = [
     {
       header: 'Code',
-      cell: (c) => <span className="font-mono font-medium">{c.code}</span>,
+      cell: (v) => <span className="font-mono font-medium">{v.code}</span>,
+    },
+    {
+      header: 'Category',
+      cell: (v) => (
+        <span className="text-muted-foreground font-mono text-xs" title={v.reference_category_id}>
+          {v.reference_category_id.slice(0, 8)}…
+        </span>
+      ),
+      hideBelow: 'md',
     },
     {
       header: 'Status',
-      cell: (c) => <ReferenceStatusBadge status={c.status} />,
-    },
-    {
-      header: 'Version',
-      cell: (c) => c.version,
-      hideBelow: 'md',
+      cell: (v) => <ReferenceStatusBadge status={v.status} />,
     },
     {
       header: 'Created',
-      cell: (c) => formatDate(c.created_at),
+      cell: (v) => formatDate(v.created_at),
       hideBelow: 'md',
     },
     {
-      header: 'Updated',
-      cell: (c) => formatDate(c.updated_at),
-      hideBelow: 'lg',
-    },
-    {
       header: 'Actions',
-      cell: (c) => (
+      cell: (v) => (
         <Button variant="outline" size="sm" asChild>
-          <Link to={`/reference-data/${c.id}`}>View</Link>
+          <Link to={`/reference-values/${v.id}`}>View</Link>
         </Button>
       ),
     },
@@ -67,14 +65,14 @@ export function ReferenceDataPage() {
   return (
     <PageContainer>
       <PageHeader
-        title="Reference Data"
-        description="Manage canonical reference categories and their values used across master data"
-        crumbs={[{ label: 'Master Data' }, { label: 'Reference Data' }]}
+        title="Reference Values"
+        description="Manage canonical reference values grouped under reference categories"
+        crumbs={[{ label: 'Master Data' }, { label: 'Reference Data', href: '/reference-data' }, { label: 'Values' }]}
         actions={
           <Button asChild>
-            <Link to="/reference-data/new">
+            <Link to="/reference-values/new">
               <Plus className="size-4" aria-hidden />
-              Create Category
+              Add Value
             </Link>
           </Button>
         }
@@ -82,8 +80,8 @@ export function ReferenceDataPage() {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-muted-foreground flex items-center gap-2 text-sm">
-          <BookMarked className="size-4" aria-hidden />
-          Reference categories
+          <ListTree className="size-4" aria-hidden />
+          Reference values
         </div>
         <div className="flex items-center gap-2">
           <DropdownMenu>
@@ -109,7 +107,7 @@ export function ReferenceDataPage() {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm" onClick={refresh} disabled={loading} aria-label="Refresh reference categories">
+          <Button variant="outline" size="sm" onClick={refresh} disabled={loading} aria-label="Refresh reference values">
             <RefreshCw className={`size-4 ${loading ? 'animate-spin' : ''}`} aria-hidden />
             Refresh
           </Button>
@@ -118,27 +116,15 @@ export function ReferenceDataPage() {
 
       <DataTable
         columns={columns}
-        data={categories}
-        rowKey={(c) => c.id}
+        data={values}
+        rowKey={(v) => v.id}
         loading={loading}
         error={error}
-        emptyTitle="No reference categories found"
-        emptyDescription="No reference category records exist yet."
+        emptyTitle="No reference values found"
+        emptyDescription="No reference value records exist yet."
         onRetry={refresh}
         footer={<Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />}
       />
-
-      <div className="text-muted-foreground mt-4 rounded-md border p-4 text-sm">
-        <p className="font-medium text-foreground">Reference Values</p>
-        <p className="mt-1">
-          Reference values are managed on the{' '}
-          <Link to="/reference-values" className="text-primary font-medium underline underline-offset-4 hover:no-underline">
-            Reference Values
-          </Link>{' '}
-          screen. Values belong to a category but are not exposed through a
-          category-scoped endpoint.
-        </p>
-      </div>
     </PageContainer>
   );
 }
